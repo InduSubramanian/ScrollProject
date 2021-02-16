@@ -19,6 +19,8 @@ window.addEventListener("scroll", function () {
   }
 });
 
+// TO check if small screen or not
+var screenWidth = window.matchMedia("(max-width: 900px)");
 // BUTTON AND DROP DOWN MENU
 const navButton = document.querySelector(".nav-toggle");
 
@@ -28,7 +30,12 @@ navButton.addEventListener("click", function () {
   if (containerHeight == 0) {
     linksContainer.style.height = `${linksHeight}px`;
   } else {
-    linksContainer.style.height = 0;
+    // If screenwidth is small, then hide the links else give it an auto height
+    if (screenWidth.matches) {
+      linksContainer.style.height = 0;
+    } else {
+      linksContainer.style.height = `auto`;
+    }
   }
 });
 
@@ -40,12 +47,23 @@ ScrollLinks.forEach(function (link) {
 
     const id = e.currentTarget.getAttribute("href").slice(1);
     const element = document.getElementById(id);
-    linksContainer.style.height = 0;
+
+    // If screenwidth is small, then hide the links else give it an auto height
+    if (screenWidth.matches) {
+      linksContainer.style.height = 0;
+    } else {
+      linksContainer.style.height = `auto`;
+    }
 
     navHeight = nav.getBoundingClientRect().height;
     containerHeight = linksContainer.getBoundingClientRect().height;
 
     let pos = element.offsetTop - navHeight;
+
+    // For big screens as it has auto height we need to reduce that also
+    if (!screenWidth.matches) {
+      pos = pos - containerHeight;
+    }
 
     // In a small screen width
     if (navHeight > 100) {
